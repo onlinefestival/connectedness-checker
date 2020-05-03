@@ -135,3 +135,6 @@ for node in graph:
             print("\t", i)
 
         print()
+
+    else:
+        print("graph is ok")
