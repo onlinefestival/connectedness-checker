@@ -7,10 +7,10 @@ import os
 
 
 def check_statement(url, original_hash):
-    print("get", url)
+    # print("get", url)
     statement_text = requests.get(url).text
 
-    print("statement", statement_text)
+    # print("statement", statement_text)
 
     statement_hash = md5(statement_text.encode('utf-8')).hexdigest()
 
@@ -32,7 +32,11 @@ def get_statement_hash(filename):
 # returns (verified, links)
 def get_page_info(url, original_hash):
     print("get", url)
-    page_text = requests.get(url).text
+
+    res = requests.get(url)
+    page_text = res.text
+
+    url = res.url
 
     soup = BeautifulSoup(page_text, 'lxml')
 
@@ -74,7 +78,7 @@ def handle_link(url_item, link_map, original_hash):
 
     for link in links:
         if link not in [x["url"] for x in link_map]:
-            print("new url", url)
+            print("new url", link)
 
             link_map_item = {
                 "url": link,
@@ -85,6 +89,8 @@ def handle_link(url_item, link_map, original_hash):
             link_map.append(link_map_item)
 
             status, link_map = handle_link(link_map_item, link_map, original_hash)
+        else:
+            print("url", link, "already exist")
 
     return True, link_map
 
