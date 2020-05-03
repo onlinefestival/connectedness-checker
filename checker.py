@@ -138,3 +138,20 @@ for node in graph:
 
     else:
         print("graph is ok")
+
+# dot export
+print("digraph graphname {")
+for i, node in enumerate(graph):
+    print("\t" + str(i) + " [label=\"" + node + "\"];")
+
+def dict_id(key, dictionary):
+    for i, test_key in enumerate(dictionary):
+        if test_key == key:
+            return i
+
+    return 0
+
+for node in graph:
+    for path in graph[node]:
+        print("\t" + str(dict_id(node, graph)) + " -> " + str(dict_id(path, graph)) + ";")
+print("}")
