@@ -91,7 +91,7 @@ def handle_link(url_item, link_map, original_hash):
     
 url = sys.argv[1]
 
-original_hash = get_statement_hash("statement.txt")
+original_hash = get_statement_hash("forecast2022.txt")
 
 link_map_item = {"url": url, "prev": None, "verified": False}
 link_map = [link_map_item]
