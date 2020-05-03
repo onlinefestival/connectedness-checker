@@ -57,40 +57,35 @@ def get_page_info(url, original_hash):
         verified = False
     else:
         if check_statement(statements_url[0], original_hash):
-            print("statement verified")
+            # print("statement verified")
             verified = True
         else:
             print("wrong statement")
             verified = False
 
-    print("links:", links)
+    # print("links:", links)
 
-    return verified, links
+    return url, verified, links
                     
-def handle_link(url_item, link_map, original_hash):
-    url = url_item["url"]
+def handle_link(url, link_map, original_hash):
+    url, verified, links = get_page_info(url, original_hash)
 
-    verified, links = get_page_info(url, original_hash)
+    # print(link_map)
+
+    if url in link_map:
+        # print("url exist, skipping")
+        return True, link_map
+
+    link_map[url] = []
 
     if not verified or links == []:
         print(url, "unverified", verified, len(links))
         return False, link_map
 
     for link in links:
-        if link not in [x["url"] for x in link_map]:
-            print("new url", link)
-
-            link_map_item = {
-                "url": link,
-                "prev": url_item,
-                "verified": False
-            }
-
-            link_map.append(link_map_item)
-
-            status, link_map = handle_link(link_map_item, link_map, original_hash)
-        else:
-            print("url", link, "already exist")
+        # print("new url", link)
+        status, link_map = handle_link(link, link_map, original_hash)
+        link_map[url].append((link, status))
 
     return True, link_map
 
@@ -99,9 +94,6 @@ url = sys.argv[1]
 
 original_hash = get_statement_hash("forecast2022.txt")
 
-link_map_item = {"url": url, "prev": None, "verified": False}
-link_map = [link_map_item]
-
-status, new_link_map = handle_link(link_map_item, link_map, original_hash)
+status, new_link_map = handle_link(url, {}, original_hash)
 
 print("link map", new_link_map)
