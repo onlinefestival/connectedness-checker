@@ -7,17 +7,17 @@ import os
 
 
 def check_statement(url, original_hash):
-    # print("get", url)
+    print("get", url)
     statement_text = requests.get(url).text
 
-    # print("statement", statement_text)
+    print("statement", statement_text)
 
     statement_hash = md5(statement_text.encode('utf-8')).hexdigest()
 
     # print("statement md5:", statement_hash)
 
     if statement_hash != original_hash:
-        # print("wrong statement")
+        print("wrong statement", statement_hash, original_hash)
         return False
     else:
         return True
