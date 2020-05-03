@@ -74,26 +74,64 @@ def handle_link(url, link_map, original_hash):
 
     if url in link_map:
         # print("url exist, skipping")
-        return True, link_map
+        return True, link_map, url
 
     link_map[url] = []
 
     if not verified or links == []:
         print(url, "unverified", verified, len(links))
-        return False, link_map
+        return False, link_map, url
 
     for link in links:
         # print("new url", link)
-        status, link_map = handle_link(link, link_map, original_hash)
-        link_map[url].append((link, status))
+        status, link_map, new_url = handle_link(link, link_map, original_hash)
+        link_map[url].append((new_url, status))
 
-    return True, link_map
+    return True, link_map, url
 
     
 url = sys.argv[1]
 
 original_hash = get_statement_hash("forecast2022.txt")
 
-status, new_link_map = handle_link(url, {}, original_hash)
+status, new_link_map, _ = handle_link(url, {}, original_hash)
 
-print("link map", new_link_map)
+def traversal(node):
+    # print("check node", node)
+    visited[node] = True
+
+    for next_node in graph[node]:
+        if not visited[next_node]:
+            traversal(next_node)
+
+graph = {}
+for node in new_link_map:
+    graph[node] = [x[0] for x in new_link_map[node]]
+
+print()
+print("traversal result")
+print()
+
+for node in graph:
+    visited = {}
+
+    for i in new_link_map:
+        visited[i] = False
+
+    # print("root node", graph[node])
+
+    for next_node in graph[node]:
+        traversal(next_node)
+
+    a = []
+    for i in visited:
+        if not visited[i]:
+            a.append(i)
+
+    if len(a) > 0:
+        print("wrong node", node)
+
+        for i in a:
+            print("\t", i)
+
+        print()
