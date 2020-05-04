@@ -12,6 +12,4 @@ python packages: bs4, lxml
 
 `python3 checker.py <url>`
 
-copy dot to <dotfile> and run
-
-`dot -Tpng <dotfile> -o <image_name>.png`
+`dot -Tpng festival.dot -o festival.png`
