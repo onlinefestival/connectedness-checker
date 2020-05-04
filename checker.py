@@ -108,6 +108,10 @@ graph = {}
 for node in new_link_map:
     graph[node] = [x[0] for x in new_link_map[node]]
 
+graph_status = {}
+for node in new_link_map:
+    graph_status[node] = [x[1] for x in new_link_map[node]]
+
 print()
 print("traversal result")
 print()
@@ -140,18 +144,23 @@ for node in graph:
         print("graph is ok")
 
 # dot export
-print("digraph graphname {")
-for i, node in enumerate(graph):
-    print("\t" + str(i) + " [label=\"" + node + "\"];")
 
-def dict_id(key, dictionary):
-    for i, test_key in enumerate(dictionary):
-        if test_key == key:
-            return i
+with open("festival.dot", "w") as dotfile:
+    dotfile.write("digraph graphname {\n")
 
-    return 0
+    for i, node in enumerate(graph):
+        color = "#AAFFAA" if graph_status[node] else "#FFAAAA"
+        dotfile.write("\t" + str(i) + " [label=\"" + node + "\", style=filled, shape=box, color=\"" + color + "\"];\n")
 
-for node in graph:
-    for path in graph[node]:
-        print("\t" + str(dict_id(node, graph)) + " -> " + str(dict_id(path, graph)) + ";")
-print("}")
+    def dict_id(key, dictionary):
+        for i, test_key in enumerate(dictionary):
+            if test_key == key:
+                return i
+
+        return 0
+
+    for node in graph:
+        for path in graph[node]:
+            dotfile.write("\t" + str(dict_id(node, graph)) + " -> " + str(dict_id(path, graph)) + ";\n")
+    
+    dotfile.write("}\n")
